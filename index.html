@@ -7,25 +7,44 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1 id="heading">Sorting Visualiser</h1>
+    <div class="top">
+      <h1 id="heading">Sorting Visualiser</h1>
+    </div>
 
-    <div class="box" id="container"></div>
-    <div class="controls">
-      <select id="dropdown">
+    <div id="sliders">
+      <label class="lengthSlider">Size : </label>
+      <input
+        id="lSlider"
+        type="range"
+        class="lengthSlider"
+        min="10"
+        max="100"
+        value="50"
+        step="5" />
+      <span id="lengthValue">50</span>
+      <label class="speedSlider" id="speed">Speed : </label>
+      <input
+        id="sSlider"
+        type="range"
+        class="speedSlider"
+        min="5"
+        max="100"
+        value="55"
+        step="1" />
+      <span id="speedValue">50</span>
+      <select class="dropdown" id="sortType">
+        <option value="null">Select Sort</option>
         <option value="bubbleSort">Bubble Sort</option>
-        <option value="selectionSort">Selection Sort</option>
         <option value="insertionSort">Insertion Sort</option>
+        <option value="selectionSort">Selection Sort</option>
         <option value="mergeSort">Merge Sort</option>
         <option value="heapSort">Heap Sort</option>
       </select>
-
+    </div>
+    <div class="box" id="container"></div>
+    <div class="controls">
       <button onclick="sort()" class="btn">Sort</button>
       <button onclick="generate()" class="btn">Generate</button>
-      <select id="dropdown">
-        <option value="10">Fast</option>
-        <option value="100">Medium</option>
-        <option value="200">Slow</option>
-      </select>
     </div>
     <script src="main.js"></script>
   </body>
