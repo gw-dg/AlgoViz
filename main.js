@@ -1,8 +1,5 @@
-alert(`Speed slider shows the interval b/w two swaps
-      For eg. if you select 5, it's 5ms interval b/w two swaps thus most fast
-      otherwise if you select 100, it's 100ms interval b/w two swaps thus most slow
-  `);
 //GLOBAL VARIABLES
+
 let height = [];
 let width = 20;
 let box = document.querySelector(".box");
@@ -57,9 +54,11 @@ function generate() {
 
 // FUNCTION TO ENABLE/DISABLE BUTTONS
 function toggleButtons(disabled) {
-  document.querySelectorAll("button, select").forEach((element) => {
-    element.disabled = disabled;
-  });
+  document
+    .querySelectorAll("button, select, input[type='range']")
+    .forEach((element) => {
+      element.disabled = disabled;
+    });
 }
 
 //FUNCTION TO SWAP THE NODE STRUCTURE OF BOX DIV
