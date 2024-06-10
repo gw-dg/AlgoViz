@@ -1,3 +1,7 @@
+alert(`Speed slider shows the interval b/w two swaps
+      For eg. if you select 5, it's 5ms interval b/w two swaps thus most fast
+      otherwise if you select 100, it's 100ms interval b/w two swaps thus most slow
+  `);
 //GLOBAL VARIABLES
 let height = [];
 let width = 20;
