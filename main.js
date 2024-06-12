@@ -1,5 +1,4 @@
 //GLOBAL VARIABLES
-
 let height = [];
 let width = 20;
 let box = document.querySelector(".box");
@@ -10,6 +9,7 @@ let speed = 55;
 //BUFFER ARRAY
 generate();
 
+//SLIDERS
 const valueSpeed = document.querySelector("#speedValue");
 const valueSize = document.querySelector("#lengthValue");
 const inputSpeed = document.querySelector("#sSlider");
@@ -29,7 +29,7 @@ inputSpeed.addEventListener("input", (event) => {
 });
 
 // FUNCTION TO SHOW BARS
-function showBars(ind) {
+function showBars(ind, ind1, mergedIndices) {
   box.innerHTML = "";
   for (let i = 0; i < length; i++) {
     let bar = document.createElement("div");
@@ -37,7 +37,17 @@ function showBars(ind) {
     bar.style.width = width + "px";
     bar.style.borderRadius = 5 + "px";
     bar.style.backgroundColor = "#374259";
-    if (ind && ind.includes(i)) bar.style.backgroundColor = "#d82f5a";
+
+    if (ind && ind.includes(i)) {
+      bar.style.backgroundColor = "#d82f5a";
+    }
+    if (ind1 && ind1.includes(i)) {
+      bar.style.backgroundColor = "#f8fda6";
+    }
+    if (mergedIndices && mergedIndices.includes(i)) {
+      bar.style.backgroundColor = "#d82f5a";
+    }
+
     box.prepend(bar);
   }
 }
@@ -94,12 +104,17 @@ function sort() {
   if (type === "null") alert("Please Select Sorting Algorithm First");
   else if (type === "bubbleSort") {
     swaps = bubbleSort(copy);
-    toggleButtons(true); // Disable buttons
+    toggleButtons(true);
     animate(swaps);
   } else if (type === "insertionSort") {
     swaps = insertionSort(copy);
     toggleButtons(true); // Disable buttons
     animate(swaps);
+  } else if (type === "mergeSort") {
+    let valuePair = [];
+    swaps = mergeSort(copy, valuePair);
+    toggleButtons(true);
+    animateMerge(swaps, valuePair);
   } else alert("work in progress");
 }
 
@@ -171,9 +186,96 @@ function insertionSort(height) {
   return swaps;
 }
 
-function mergeSort() {
-  let box = document.querySelectorAll(".box > div");
-  let length = box.length;
+function mergeSort(height, valuePair) {
+  let length = height.length;
+  let copy = height.slice(); // Create a copy of the height
+  let swaps = [];
+  mS(height, copy, 0, length - 1, swaps, valuePair);
+  return swaps;
+}
+
+function mS(height, copy, lo, hi, swaps, valuePair) {
+  if (lo >= hi) return;
+  let mid = Math.floor((lo + hi) / 2);
+  mS(height, copy, lo, mid, swaps, valuePair);
+  mS(height, copy, mid + 1, hi, swaps, valuePair);
+  merge(height, copy, lo, mid, hi, swaps, valuePair);
+}
+
+function merge(height, copy, lo, mid, hi, swaps, valuePair) {
+  let l = lo;
+  let r = mid + 1;
+  let ans = [];
+  let swapArr = [];
+  let valuePairArr = [];
+
+  while (l <= mid && r <= hi) {
+    if (copy[l] <= copy[r]) {
+      ans.push(copy[l]);
+      swapArr.push([lo, l]);
+      valuePairArr.push([lo, copy[l]]);
+      l++;
+    } else {
+      ans.push(copy[r]);
+      swapArr.push([lo, r]);
+      valuePairArr.push([lo, copy[r]]);
+      r++;
+    }
+    lo++;
+  }
+
+  while (l <= mid) {
+    ans.push(copy[l]);
+    swapArr.push([lo, l]);
+    valuePairArr.push([lo, copy[l]]);
+    l++;
+    lo++;
+  }
+
+  while (r <= hi) {
+    ans.push(copy[r]);
+    swapArr.push([lo, r]);
+    valuePairArr.push([lo, copy[r]]);
+    r++;
+    lo++;
+  }
+
+  for (let i = 0; i < ans.length; i++) {
+    copy[i + lo - ans.length] = ans[i];
+  }
+
+  swaps.push(swapArr);
+  valuePair.push(valuePairArr);
+}
+
+function animateMerge(swaps, valuePair) {
+  if (!swaps || !valuePair || (swaps.length === 0 && valuePair.length === 0)) {
+    showBars();
+    toggleButtons(false);
+    return;
+  }
+
+  let ind = swaps.shift();
+  let vP = valuePair.shift();
+
+  for (let i = 0; i < vP.length; i++) {
+    height[vP[i][0]] = vP[i][1];
+  }
+
+  let mergedIndices = [];
+  for (let i = ind[0][0]; i <= ind[ind.length - 1][1]; i++) {
+    mergedIndices.push(i);
+  }
+
+  showBars(
+    ind.map((s) => s[1]),
+    ind.map((s) => s[0]),
+    mergedIndices
+  );
+
+  setTimeout(function () {
+    animateMerge(swaps, valuePair);
+  }, speed);
 }
 
 function heapSort() {
